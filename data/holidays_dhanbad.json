@@ -1,0 +1,487 @@
+{
+  "region": "Dhanbad, Jharkhand, India",
+  "description": "Localized festive and industrial holidays relevant to Dhanbad, Jharkhand. Compiled from the Jharkhand Government holiday list and regional festival calendars. Dates for lunar festivals are approximate (marked in notes). The 2017 list covers the training data year; the 2026 list covers the live forecast serving year.",
+  "categories": {
+    "national": "National public holiday observed across India",
+    "regional": "Jharkhand state / Dhanbad regional festival with strong local observance",
+    "industrial": "Industrial holiday affecting mines, factories and workshops in the Dhanbad coal belt"
+  },
+  "holidays": [
+    {
+      "date": "2017-01-14",
+      "name": "Makar Sankranti / Tusu Parab (start)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Tusu is a major folk festival of the Dhanbad-Jharkhand coal belt, observed over several days around Makar Sankranti (approx. Jan 14-16)."
+    },
+    {
+      "date": "2017-01-26",
+      "name": "Republic Day",
+      "category": "national",
+      "impact": "medium",
+      "notes": "Morning ceremonial load profile shift."
+    },
+    {
+      "date": "2017-02-24",
+      "name": "Maha Shivratri",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Night-long temple observance."
+    },
+    {
+      "date": "2017-03-12",
+      "name": "Holi",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Holika Dahan on Mar 11 evening; Holi observed Mar 12-13 in Jharkhand."
+    },
+    {
+      "date": "2017-03-13",
+      "name": "Holi (Day 2 / Dulandi)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Second day of Holi observance."
+    },
+    {
+      "date": "2017-03-29",
+      "name": "Sarhul",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Tribal spring festival of Jharkhand (approx. date, Chaitra Shukla Tritiya)."
+    },
+    {
+      "date": "2017-04-04",
+      "name": "Ram Navami",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Large street processions across Jharkhand."
+    },
+    {
+      "date": "2017-04-09",
+      "name": "Mahavir Jayanti",
+      "category": "regional",
+      "impact": "low",
+      "notes": "Jain festival."
+    },
+    {
+      "date": "2017-04-14",
+      "name": "Good Friday / Dr. Ambedkar Jayanti",
+      "category": "national",
+      "impact": "low",
+      "notes": "Dual observance."
+    },
+    {
+      "date": "2017-05-01",
+      "name": "May Day (Labour Day)",
+      "category": "industrial",
+      "impact": "medium",
+      "notes": "Significant for the mining workforce of Dhanbad."
+    },
+    {
+      "date": "2017-05-10",
+      "name": "Buddha Purnima",
+      "category": "regional",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2017-06-26",
+      "name": "Eid-ul-Fitr",
+      "category": "national",
+      "impact": "high",
+      "notes": "Eid prayers and feasting; observed Jun 25-26 (approx.)."
+    },
+    {
+      "date": "2017-06-28",
+      "name": "Sant Kabir Jayanti",
+      "category": "regional",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2017-08-07",
+      "name": "Raksha Bandhan",
+      "category": "regional",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2017-08-15",
+      "name": "Independence Day",
+      "category": "national",
+      "impact": "medium",
+      "notes": "Morning ceremonial load profile shift."
+    },
+    {
+      "date": "2017-08-15",
+      "name": "Janmashtami",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Observed Aug 14-15 in Jharkhand."
+    },
+    {
+      "date": "2017-09-02",
+      "name": "Bakrid / Eid-ul-Zuha",
+      "category": "national",
+      "impact": "medium",
+      "notes": "Observed Sep 1-2 (approx.)."
+    },
+    {
+      "date": "2017-09-17",
+      "name": "Vishwakarma Puja",
+      "category": "industrial",
+      "impact": "high",
+      "notes": "Fixed date (Sep 17). The biggest industrial shutdown in Dhanbad: coal mines, workshops and factories close; visible demand dip on industrial feeders."
+    },
+    {
+      "date": "2017-09-20",
+      "name": "Karma Puja",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Tribal festival on Bhadrapada Amavasya (approx. date)."
+    },
+    {
+      "date": "2017-09-28",
+      "name": "Durga Puja (Saptami)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Durga Puja is among the largest festivals in the Jharkhand-Bengal border belt; multi-day observance Sep 28-30."
+    },
+    {
+      "date": "2017-09-29",
+      "name": "Durga Puja (Ashtami/Navami)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Peak pandal footfall and lighting load."
+    },
+    {
+      "date": "2017-09-30",
+      "name": "Durga Puja (Vijayadashami) / Muharram",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Dussehra immersion processions; Muharram also observed Oct 1 (approx.)."
+    },
+    {
+      "date": "2017-10-02",
+      "name": "Gandhi Jayanti",
+      "category": "national",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2017-10-17",
+      "name": "Dhanteras",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Evening lamp-lighting and shopping load spike; culturally resonant with Dhanbad's name."
+    },
+    {
+      "date": "2017-10-19",
+      "name": "Diwali (Lakshmi Puja)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Evening lighting load spike across all feeders."
+    },
+    {
+      "date": "2017-10-20",
+      "name": "Govardhan Puja / Bhai Dooj / Sohrai",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Sohrai, the Santal cattle festival of Jharkhand, is observed around Diwali (approx.)."
+    },
+    {
+      "date": "2017-10-26",
+      "name": "Chhath Puja (Sandhya Arghya)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Chhath is the single most important festival of Jharkhand; four-day observance (Nahay Khay Oct 24, Kharna Oct 25, Sandhya Arghya Oct 26, Usha Arghya Oct 27) with distinctive dawn/dusk load patterns."
+    },
+    {
+      "date": "2017-10-27",
+      "name": "Chhath Puja (Usha Arghya)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Dawn riverside observance."
+    },
+    {
+      "date": "2017-11-04",
+      "name": "Guru Nanak Jayanti",
+      "category": "national",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2017-11-15",
+      "name": "Birsa Munda Jayanti / Jharkhand Foundation Day",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Statehood day of Jharkhand (Nov 15, 2000)."
+    },
+    {
+      "date": "2017-12-02",
+      "name": "Id-e-Milad",
+      "category": "national",
+      "impact": "low",
+      "notes": "Observed Dec 1-2 (approx.)."
+    },
+    {
+      "date": "2017-12-25",
+      "name": "Christmas",
+      "category": "national",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2026-01-14",
+      "name": "Makar Sankranti / Tusu Parab (start)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Multi-day Tusu observance around Makar Sankranti (approx.)."
+    },
+    {
+      "date": "2026-01-26",
+      "name": "Republic Day",
+      "category": "national",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2026-02-15",
+      "name": "Maha Shivratri",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-03-03",
+      "name": "Holi",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date; Holi observed Mar 3-4, 2026."
+    },
+    {
+      "date": "2026-03-04",
+      "name": "Holi (Day 2 / Dulandi)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-03-20",
+      "name": "Eid-ul-Fitr",
+      "category": "national",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-03-27",
+      "name": "Ram Navami",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-03-27",
+      "name": "Sarhul",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-04-01",
+      "name": "Mahavir Jayanti",
+      "category": "regional",
+      "impact": "low",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-04-03",
+      "name": "Good Friday",
+      "category": "national",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2026-04-14",
+      "name": "Dr. Ambedkar Jayanti",
+      "category": "national",
+      "impact": "low",
+      "notes": ""
+    },
+    {
+      "date": "2026-05-01",
+      "name": "May Day (Labour Day)",
+      "category": "industrial",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2026-05-01",
+      "name": "Buddha Purnima",
+      "category": "regional",
+      "impact": "low",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-05-27",
+      "name": "Bakrid / Eid-ul-Zuha",
+      "category": "national",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-06-26",
+      "name": "Muharram (Ashura)",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-08-15",
+      "name": "Independence Day",
+      "category": "national",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2026-08-26",
+      "name": "Id-e-Milad",
+      "category": "national",
+      "impact": "low",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-08-28",
+      "name": "Raksha Bandhan",
+      "category": "regional",
+      "impact": "low",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-09-04",
+      "name": "Janmashtami",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-09-17",
+      "name": "Vishwakarma Puja",
+      "category": "industrial",
+      "impact": "high",
+      "notes": "Fixed date (Sep 17); major industrial shutdown in the Dhanbad coal belt."
+    },
+    {
+      "date": "2026-09-25",
+      "name": "Karma Puja",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date (Bhadrapada Amavasya)."
+    },
+    {
+      "date": "2026-10-17",
+      "name": "Durga Puja (Saptami)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date; multi-day observance Oct 17-20, 2026."
+    },
+    {
+      "date": "2026-10-18",
+      "name": "Durga Puja (Ashtami)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-10-19",
+      "name": "Durga Puja (Navami)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-10-20",
+      "name": "Durga Puja (Vijayadashami) / Dussehra",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-10-02",
+      "name": "Gandhi Jayanti",
+      "category": "national",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2026-11-06",
+      "name": "Dhanteras",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-08",
+      "name": "Diwali (Lakshmi Puja)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-09",
+      "name": "Govardhan Puja / Bhai Dooj / Sohrai",
+      "category": "regional",
+      "impact": "medium",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-10",
+      "name": "Chhath Puja (Nahay Khay)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date; four-day observance Nov 10-13, 2026."
+    },
+    {
+      "date": "2026-11-11",
+      "name": "Chhath Puja (Kharna)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-12",
+      "name": "Chhath Puja (Sandhya Arghya)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-13",
+      "name": "Chhath Puja (Usha Arghya)",
+      "category": "regional",
+      "impact": "high",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-11-15",
+      "name": "Birsa Munda Jayanti / Jharkhand Foundation Day",
+      "category": "regional",
+      "impact": "medium",
+      "notes": ""
+    },
+    {
+      "date": "2026-11-24",
+      "name": "Guru Nanak Jayanti",
+      "category": "national",
+      "impact": "low",
+      "notes": "Approx. date."
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Christmas",
+      "category": "national",
+      "impact": "low",
+      "notes": ""
+    }
+  ]
+}
