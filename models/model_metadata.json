@@ -1,0 +1,26 @@
+{
+  "model_type": "HistGradientBoostingRegressor",
+  "target": "system_demand_kw",
+  "units": "kW (average power per 30-min block)",
+  "aggregation": "mean of 10-min readings per 30-min block, summed across F1/F2/F3 132kV feeders",
+  "feature_set": "calendar + cyclical encodings + Open-Meteo weather (Dhanbad) + category-aware Dhanbad holiday flags",
+  "training_range": [
+    "2017-01-01 00:00:00",
+    "2017-12-30 23:30:00"
+  ],
+  "test_range": [
+    "2017-12-01 00:00:00",
+    "2017-12-30 23:30:00"
+  ],
+  "holdout_metrics": {
+    "MAE_kW": 1995.4,
+    "RMSE_kW": 2625.9,
+    "MAPE_%": 3.35,
+    "R2": 0.97
+  },
+  "sklearn_version": "1.8.0",
+  "location": "Dhanbad, Jharkhand, India (23.7957 N, 86.4304 E)",
+  "weather_source": "Open-Meteo (archive for training, forecast API for serving)",
+  "holiday_source": "data/holidays_dhanbad.json (self-sourced, Jharkhand-specific)",
+  "created_at": "2026-10-08T21:11:20.799916"
+}
