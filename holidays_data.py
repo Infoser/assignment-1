@@ -110,7 +110,7 @@ def build() -> dict:
 
 
 if __name__ == "__main__":
-    out = Path(__file__).resolve().parent.parent / "data" / "holidays_dhanbad.json"
+    out = Path(__file__).resolve().parent / "data" / "holidays_dhanbad.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(build(), indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {out} with {len(H)} holiday entries")
