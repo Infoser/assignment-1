@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__
+*.py[cod]
+.venv
+venv
+.ipynb_checkpoints
+.vercel
+.env
+.vscode
+.idea
+figures
+*.md

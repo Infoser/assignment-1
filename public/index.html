@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>APU Demand Forecast | Dhanbad</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --panel: #1e293b; --panel2: #273449; --line: #334155;
+    --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8; --accent2: #f87171;
+    --ok: #4ade80; --warn: #fbbf24; --ind: #c084fc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 20px; }
+  h1 { font-size: 1.45rem; font-weight: 600; letter-spacing: 0.2px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+  .badge { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; font-size: 0.8rem; color: var(--muted); }
+  .badge b { color: var(--text); font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card .k { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; }
+  .card .v { font-size: 1.35rem; font-weight: 600; margin-top: 6px; }
+  .card .v small { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+  .panel h2 { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  .chartbox { position: relative; height: 380px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 500; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.8px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.72rem; border: 1px solid; }
+  .pill.national { color: var(--accent); border-color: var(--accent); }
+  .pill.regional { color: var(--ok); border-color: var(--ok); }
+  .pill.industrial { color: var(--ind); border-color: var(--ind); }
+  .pill.high { color: var(--accent2); border-color: var(--accent2); }
+  .pill.medium { color: var(--warn); border-color: var(--warn); }
+  .pill.low { color: var(--muted); border-color: var(--muted); }
+  .none { color: var(--muted); font-size: 0.85rem; padding: 8px 0; }
+  footer { color: var(--muted); font-size: 0.75rem; text-align: center; padding: 12px 0 4px; }
+  #status { font-size: 0.85rem; color: var(--muted); margin: 8px 0; }
+  button.refresh { background: var(--accent); color: #06263a; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
+  button.refresh:hover { filter: brightness(1.1); }
+  .grid2 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Apex Power & Utilities — <span>Demand Forecast</span></h1>
+      <div class="sub" id="meta">Dhanbad, Jharkhand, India</div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div class="badge" id="modelBadge">model: …</div>
+      <button class="refresh" onclick="loadDashboard()">Refresh</button>
+    </div>
+  </header>
+
+  <div class="cards" id="cards"></div>
+  <div id="status">loading forecast…</div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h2>Next 24 hours — predicted demand per 30-min block</h2>
+      <div class="chartbox"><canvas id="chart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2>Localized holidays in the forecast window</h2>
+      <div id="holidays"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Weather detail (temperature, humidity, cloud cover, wind)</h2>
+    <div class="chartbox" style="height:300px;"><canvas id="wxChart"></canvas></div>
+  </div>
+
+  <footer>
+    Endpoints: <code>/api/forecast</code> · <code>/api/weather</code> · <code>/api/holidays</code> · <code>/api/dashboard</code> · <code>/docs</code>
+    — trained on 2017 Utility_consumption.csv, weather from Open-Meteo, holidays self-sourced for Dhanbad, Jharkhand
+  </footer>
+</div>
+
+<script>
+let chart = null, wxChart = null;
+
+function statCard(k, v, unit, color) {
+  return `<div class="card"><div class="k">${k}</div><div class="v" ${color ? `style="color:${color}"` : ""}>${v} <small>${unit}</small></div></div>`;
+}
+
+function loadDashboard() {
+  document.getElementById("status").textContent = "loading forecast…";
+  fetch("/api/dashboard")
+    .then(r => { if (!r.ok) throw new Error("API " + r.status); return r.json(); })
+    .then(d => render(d))
+    .catch(e => { document.getElementById("status").textContent = "failed to load: " + e.message; });
+}
+
+function render(d) {
+  const m = d.meta, f = d.forecast, w = d.weather;
+  document.getElementById("meta").textContent =
+    `${m.location} · generated ${m.generated_at_ist} IST · window ${m.forecast_start_ist.slice(11,16)} → ${m.forecast_end_ist.slice(11,16)} · ${m.n_blocks} blocks × ${m.block_minutes} min · weather: ${m.weather_source}`;
+  document.getElementById("modelBadge").innerHTML =
+    `<b>${m.model}</b> · holdout MAPE <b>${m.holdout_metrics["MAPE_%"]}%</b> · R² <b>${m.holdout_metrics["R2"]}</b>`;
+  document.getElementById("status").textContent = "";
+
+  const temps = w.map(x => x.temperature_c).filter(x => x !== null);
+  const hums = w.map(x => x.humidity_pct).filter(x => x !== null);
+  const clouds = w.map(x => x.cloud_cover_pct).filter(x => x !== null);
+  const winds = w.map(x => x.wind_speed_ms).filter(x => x !== null);
+  const avg = a => a.length ? (a.reduce((s, x) => s + x, 0) / a.length) : null;
+  const peak = Math.max(...f.map(x => x.predicted_demand_kw));
+  const minv = Math.min(...f.map(x => x.predicted_demand_kw));
+  document.getElementById("cards").innerHTML =
+    statCard("Peak demand", Math.round(peak).toLocaleString(), "kW", "#f87171") +
+    statCard("Min demand", Math.round(minv).toLocaleString(), "kW", "#4ade80") +
+    statCard("Avg temperature", avg(temps) !== null ? avg(temps).toFixed(1) : "—", "°C", "#fbbf24") +
+    statCard("Avg humidity", avg(hums) !== null ? avg(hums).toFixed(0) : "—", "%", "#38bdf8") +
+    statCard("Avg cloud cover", avg(clouds) !== null ? avg(clouds).toFixed(0) : "—", "%", "#94a3b8") +
+    statCard("Avg wind speed", avg(winds) !== null ? avg(winds).toFixed(1) : "—", "m/s", "#c084fc");
+
+  const labels = f.map(x => x.label);
+  const values = f.map(x => x.predicted_demand_kw);
+  const pointColors = f.map(x => x.holiday ? (x.holiday_category === "industrial" ? "#c084fc" : "#f87171") : "#38bdf8");
+  const pointRadii = f.map(x => x.holiday ? 6 : 2);
+
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById("chart"), {
+    type: "line",
+    data: { labels, datasets: [
+      { label: "Predicted demand (kW)", data: values, borderColor: "#38bdf8",
+        backgroundColor: "rgba(56,189,248,0.12)", fill: true, tension: 0.35,
+        pointRadius: pointRadii, pointBackgroundColor: pointColors, borderWidth: 2 },
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { labels: { color: "#94a3b8" } },
+        tooltip: { callbacks: {
+          afterBody: (items) => {
+            const x = f[items[0].dataIndex];
+            if (x.holiday) return `\nHoliday: ${x.holiday} (${x.holiday_category}, impact: ${x.holiday_impact})`;
+            return "";
+          }
+        }}
+      },
+      scales: {
+        x: { ticks: { color: "#94a3b8", maxRotation: 90, autoSkip: true, maxTicksLimit: 12 }, grid: { color: "#1e293b" } },
+        y: { ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" }, title: { display: true, text: "kW", color: "#94a3b8" } }
+      }
+    }
+  });
+
+  const hol = d.holidays;
+  document.getElementById("holidays").innerHTML = hol.length === 0
+    ? `<div class="none">No localized Dhanbad holidays in the next ${m.n_blocks * m.block_minutes / 60} hours.</div>`
+    : `<table><thead><tr><th>Date</th><th>Holiday</th><th>Category</th><th>Impact</th></tr></thead><tbody>` +
+      hol.map(h => `<tr><td>${h.date}</td><td>${h.name}</td>` +
+        `<td><span class="pill ${h.category}">${h.category}</span></td>` +
+        `<td><span class="pill ${h.impact}">${h.impact}</span></td></tr>`).join("") +
+      `</tbody></table>`;
+
+  const wxLabels = w.map(x => x.label);
+  if (wxChart) wxChart.destroy();
+  wxChart = new Chart(document.getElementById("wxChart"), {
+    type: "line",
+    data: { labels: wxLabels, datasets: [
+      { label: "Temperature (°C)", data: w.map(x => x.temperature_c), borderColor: "#fbbf24", yAxisID: "y", tension: 0.35, pointRadius: 0, borderWidth: 2 },
+      { label: "Humidity (%)", data: w.map(x => x.humidity_pct), borderColor: "#38bdf8", yAxisID: "y", tension: 0.35, pointRadius: 0, borderWidth: 2 },
+      { label: "Cloud cover (%)", data: w.map(x => x.cloud_cover_pct), borderColor: "#94a3b8", yAxisID: "y", tension: 0.35, pointRadius: 0, borderWidth: 2, borderDash: [5, 4] },
+      { label: "Wind speed (m/s)", data: w.map(x => x.wind_speed_ms), borderColor: "#c084fc", yAxisID: "y2", tension: 0.35, pointRadius: 0, borderWidth: 2 },
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: { legend: { labels: { color: "#94a3b8" } } },
+      scales: {
+        x: { ticks: { color: "#94a3b8", maxTicksLimit: 12 }, grid: { color: "#1e293b" } },
+        y: { position: "left", ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" } },
+        y2: { position: "right", ticks: { color: "#c084fc" }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+}
+
+loadDashboard();
+</script>
+</body>
+</html>

@@ -116,8 +116,6 @@ def fetch_open_meteo(start_date: str, end_date: str, archive: bool = True,
         "hourly": "temperature_2m,relative_humidity_2m,cloud_cover,wind_speed_10m",
         "timezone": "Asia/Kolkata",
     }
-    if not archive:
-        params["forecast_days"] = 3
     r = requests.get(base, params=params, timeout=timeout)
     r.raise_for_status()
     h = r.json()["hourly"]
@@ -134,49 +132,3 @@ def fetch_open_meteo(start_date: str, end_date: str, archive: bool = True,
 
 def hourly_to_30min(df: pd.DataFrame) -> pd.DataFrame:
     return df.set_index("ts").resample(AGG_FREQ).interpolate("time").round(3).reset_index()
-
-
-def make_payload(artifact, now: datetime | None = None) -> dict:
-    now = now or datetime.now(IST)
-    blocks = next_30min_blocks(now)
-    start_d = (blocks[0] - pd.Timedelta(hours=24)).strftime("%Y-%m-%d")
-    end_d = (blocks[-1] + pd.Timedelta(hours=24)).strftime("%Y-%m-%d")
-    wx = hourly_to_30min(fetch_open_meteo(start_d, end_d, archive=False))
-    holidays = load_holidays()["holidays"]
-    X = build_feature_frame(blocks, wx, holidays)
-    yhat = predict_blocks(artifact, X)
-
-    wx_blocks = wx.set_index("ts").reindex(blocks)
-    hol = pd.DataFrame({"date": pd.Series(blocks.tz_localize(None).date)})
-    hol = hol.merge(pd.DataFrame(holidays), on="date", how="left")
-
-    return {
-        "meta": {
-            "location": "Dhanbad, Jharkhand, India",
-            "generated_at_ist": now.strftime("%Y-%m-%d %H:%M"),
-            "forecast_start_ist": str(blocks[0]),
-            "forecast_end_ist": str(blocks[-1]),
-            "n_blocks": int(len(blocks)),
-            "block_minutes": 30,
-            "model": artifact["metadata"].get("model_type"),
-            "units": "kW (average power per 30-min block)",
-        },
-        "forecast": [
-            {
-                "block": i,
-                "timestamp_ist": str(ts),
-                "predicted_demand_kw": round(float(p), 1),
-                "temperature_c": round(float(t), 1),
-                "humidity_pct": round(float(hu), 1),
-                "cloud_cover_pct": round(float(cl), 1),
-                "wind_speed_ms": round(float(wd), 2),
-                "holiday": None if pd.isna(nm) else nm,
-                "holiday_category": None if pd.isna(nm) else cat,
-            }
-            for i, (ts, p, t, hu, cl, wd, nm, cat) in enumerate(zip(
-                blocks, yhat,
-                wx_blocks["temperature"], wx_blocks["humidity"],
-                wx_blocks["cloud_cover"], wx_blocks["wind_speed"],
-                hol["name"], hol["category"]))
-        ],
-    }
