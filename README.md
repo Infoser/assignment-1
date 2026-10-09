@@ -12,6 +12,7 @@ The trained model is served through a FastAPI backend and visualized on a single
 assignment-1/
 ├── eda.py                     Milestone 1 — EDA, data quality audit, cleaning, API weather integration
 ├── train_model.py             Milestones 2-3 — feature engineering, model comparison, training, artifact
+├── apu_forecasting.ipynb      Jupyter notebook documenting the full analysis (EDA, cleaning, features, justification, model)
 ├── apu_pipeline.py            Shared core: feature contract, weather fetch, IST block logic, model I/O
 ├── main.py                    FastAPI backend (Vercel entrypoint + local/Docker server)
 ├── holidays_data.py           Self-sourced Dhanbad holiday list (generates data/holidays_dhanbad.json)
@@ -63,13 +64,22 @@ Or with the CLI: `npm i -g vercel && vercel --prod`.
 
 ## 3. How the pipeline runs (reproducibility)
 
+**Option A — Jupyter notebook (full documented walkthrough):**
+
+```bash
+pip install -r requirements-dev.txt
+jupyter lab apu_forecasting.ipynb   # Run All — EDA, cleaning, features, model comparison, training, artifact
+```
+
+**Option B — headless scripts:**
+
 ```bash
 pip install -r requirements-dev.txt
 python eda.py            # Milestone 1: EDA prints + figures/01-07, cleans data -> data/apu_30min_clean.csv
 python train_model.py    # Milestones 2-3: model comparison + figures/08-09, trains -> models/apu_demand_model.pkl
 ```
 
-Both scripts are deterministic (fixed random seeds) and reuse the cached API weather, so they run offline after the first fetch.
+The notebook and the scripts run the same deterministic pipeline (fixed random seeds) and reuse the cached API weather, so they run offline after the first fetch.
 
 ## 4. Data sources
 

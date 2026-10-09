@@ -22,5 +22,5 @@
   "location": "Dhanbad, Jharkhand, India (23.7957 N, 86.4304 E)",
   "weather_source": "Open-Meteo (archive for training, forecast API for serving)",
   "holiday_source": "data/holidays_dhanbad.json (self-sourced, Jharkhand-specific)",
-  "created_at": "2026-10-08T21:11:20.799916"
+  "created_at": "2026-10-08T23:06:12.807694"
 }
