@@ -18,10 +18,12 @@ The trained model is served through a FastAPI backend and visualized on a single
 
 ![API responses](screenshots/03_api_endpoint_responses.png)
 
-**EDA & model highlights** (full set in `figures/`)
+**EDA & model highlights** (also in `screenshots/` for easy download — full set in `figures/`)
 
-![Demand time series](figures/01_demand_timeseries.png)
-![Feature importance](figures/08_feature_importance.png)
+![Demand time series](screenshots/04_eda_demand_timeseries.png)
+![Daily and weekly profiles](screenshots/05_eda_daily_weekly_profile.png)
+![Feature importance](screenshots/06_feature_importance.png)
+![24-hour demo forecast from the saved artifact](screenshots/07_24h_demo_forecast.png)
 
 ## Assignment milestone mapping
 
