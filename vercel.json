@@ -7,7 +7,8 @@
       "includeFiles": [
         "models/**",
         "data/**",
-        "apu_pipeline.py"
+        "apu_pipeline.py",
+        "db.py"
       ]
     }
   }

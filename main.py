@@ -19,6 +19,7 @@ from apu_pipeline import (
     next_30min_blocks,
     predict_blocks,
 )
+from db import supabase_enabled, supabase_reachable, sb_insert, sb_select
 
 CACHE_TTL_SECONDS = 300
 
@@ -58,6 +59,13 @@ def climatology_weather(blocks: pd.DatetimeIndex) -> pd.DataFrame:
     return out
 
 
+def load_holiday_rows():
+    rows = sb_select("holidays", {"select": "date,name,category,impact,notes", "order": "date.asc"})
+    if rows:
+        return rows, "supabase (holidays table)"
+    return load_holidays()["holidays"], "local JSON fallback"
+
+
 def window_payload(n_blocks: int) -> dict:
     global _cache
     if _cache["key"] == n_blocks and time.time() - _cache["ts"] < CACHE_TTL_SECONDS:
@@ -76,7 +84,7 @@ def window_payload(n_blocks: int) -> dict:
         wx = climatology_weather(blocks)
         weather_source = "climatological fallback (monthly-hourly means from cached Open-Meteo archive)"
 
-    holidays = load_holidays()["holidays"]
+    holidays, holiday_source = load_holiday_rows()
     X = build_feature_frame(blocks, wx, holidays)
     yhat = predict_blocks(artifact, X)
 
@@ -95,6 +103,7 @@ def window_payload(n_blocks: int) -> dict:
         "holdout_metrics": artifact["metadata"]["holdout_metrics"],
         "units": "kW (average power per 30-min block)",
         "weather_source": weather_source,
+        "holiday_source": holiday_source,
     }
     forecast = [
         {
@@ -142,6 +151,18 @@ def window_payload(n_blocks: int) -> dict:
         "holidays": holiday_list,
         "holiday_categories": load_holidays()["categories"],
     }
+    sb_insert(
+        "forecast_logs",
+        [{
+            "generated_at_ist": meta["generated_at_ist"],
+            "n_blocks": meta["n_blocks"],
+            "forecast_start_ist": meta["forecast_start_ist"],
+            "forecast_end_ist": meta["forecast_end_ist"],
+            "model": meta["model"],
+            "holdout_mape": meta["holdout_metrics"]["MAPE_%"],
+            "payload": {"forecast": forecast, "weather": weather, "holidays": holiday_list},
+        }],
+    )
     _cache = {"key": n_blocks, "ts": time.time(), "payload": payload}
     return payload
 
@@ -167,6 +188,7 @@ def health():
         "trained_on": m["training_range"],
         "holdout_metrics": m["holdout_metrics"],
         "artifact_kb": round(MODEL_PATH.stat().st_size / 1024, 1),
+        "supabase": "connected" if (supabase_enabled() and supabase_reachable()) else "disabled",
     }
 
 
@@ -204,3 +226,18 @@ def dashboard(blocks: int = Query(default=48, ge=1, le=96)):
         return window_payload(blocks)
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"dashboard payload failed: {e}")
+
+
+@app.get("/api/history")
+def history(limit: int = Query(default=20, ge=1, le=100)):
+    if not supabase_enabled():
+        return {"meta": {"supabase": "disabled", "note": "set SUPABASE_URL and SUPABASE_SERVICE_KEY to enable forecast logging"}, "history": []}
+    rows = sb_select(
+        "forecast_logs",
+        {
+            "select": "id,created_at,generated_at_ist,n_blocks,forecast_start_ist,forecast_end_ist,model,holdout_mape",
+            "order": "created_at.desc",
+            "limit": limit,
+        },
+    )
+    return {"meta": {"supabase": "connected" if rows is not None else "error"}, "history": rows or []}

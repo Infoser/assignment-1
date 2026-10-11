@@ -2,7 +2,35 @@
 
 End-to-end prototype that forecasts electricity demand for every **30-minute block of the day (48 blocks)** for APU, a power provider serving **Dhanbad, Jharkhand, India**. Built for the Data Developer Intern assignment at Exascale Deeptech & AI Pvt. Ltd.
 
-The trained model is served through a FastAPI backend and visualized on a single-page dashboard. The whole stack deploys to Docker **and** Vercel.
+The trained model is served through a FastAPI backend and visualized on a single-page dashboard. The whole stack runs locally, in Docker, and on Vercel.
+
+## Screenshots
+
+**Live dashboard — 24-hour forecast per 30-min block, weather overlay, localized holiday panel**
+
+![Dashboard](screenshots/01_dashboard_forecast.png)
+
+**Interactive API documentation (FastAPI / Swagger)**
+
+![API docs](screenshots/02_api_docs.png)
+
+**Live API endpoint responses**
+
+![API responses](screenshots/03_api_endpoint_responses.png)
+
+**EDA & model highlights** (full set in `figures/`)
+
+![Demand time series](figures/01_demand_timeseries.png)
+![Feature importance](figures/08_feature_importance.png)
+
+## Assignment milestone mapping
+
+| Milestone | Where it lives |
+|---|---|
+| M1 — EDA & data cleaning (25 pts) | `apu_forecasting.ipynb` §2–8 · `eda.py` · `figures/01–07` |
+| M2 — Feature engineering & model justification (35 pts) | notebook §9–10 · `train_model.py` · `apu_pipeline.py` |
+| M3 — Model + backend API (20 pts) | `models/apu_demand_model.pkl` · `main.py` (`/api/forecast`, `/api/weather`, `/api/holidays`) |
+| M4 — Frontend & packaging (20 pts) | `public/index.html` · `Dockerfile` · `vercel.json` · this README |
 
 ---
 
@@ -14,10 +42,14 @@ assignment-1/
 ├── train_model.py             Milestones 2-3 — feature engineering, model comparison, training, artifact
 ├── apu_forecasting.ipynb      Jupyter notebook documenting the full analysis (EDA, cleaning, features, justification, model)
 ├── apu_pipeline.py            Shared core: feature contract, weather fetch, IST block logic, model I/O
+├── db.py                      Supabase REST client (optional persistence, graceful fallback)
+├── seed_holidays.py           Seeds data/holidays_dhanbad.json into the Supabase holidays table
+├── supabase/schema.sql        DDL for the optional Supabase tables (holidays, forecast_logs)
 ├── main.py                    FastAPI backend (Vercel entrypoint + local/Docker server)
 ├── holidays_data.py           Self-sourced Dhanbad holiday list (generates data/holidays_dhanbad.json)
 ├── public/
 │   └── index.html             Frontend dashboard (Chart.js)
+├── screenshots/               Working-prototype screenshots (dashboard, API docs, endpoint responses)
 ├── data/
 │   ├── Utility_consumption.csv       Provided mock data (10-min load, 3 feeders + weather)
 │   ├── holidays_dhanbad.json         Generated localized holiday dataset (2017 + 2026)
@@ -133,6 +165,7 @@ The notebook and the scripts run the same deterministic pipeline (fixed random s
 | `GET /api/weather?blocks=48` | Temperature, humidity, cloud cover and wind speed for every block of the forecast window |
 | `GET /api/holidays?blocks=48` | Localized Dhanbad holidays inside the forecast window + category legend |
 | `GET /api/dashboard?blocks=48` | Combined payload (forecast + weather + holidays) for the frontend |
+| `GET /api/history?limit=20` | Recent forecast windows logged in Supabase (returns empty meta when Supabase is not configured) |
 | `GET /docs` | Interactive OpenAPI docs |
 
 The backend loads `models/apu_demand_model.pkl` lazily (cached per warm instance), fetches Open-Meteo live at request time, caches the window payload for 5 minutes, and falls back to climatology (monthly-hourly means from the cached archive) if the upstream weather API fails.
@@ -146,7 +179,22 @@ The backend loads `models/apu_demand_model.pkl` lazily (cached per warm instance
 - Summary cards: peak/min demand, average temperature, humidity, cloud cover, wind
 - Localized holiday table (date, name, category, impact) or a "no holidays in window" notice
 
-## 9. Notes
+## 9. Optional: Supabase integration (forecast history + holidays in Postgres)
+
+The API runs fully without a database — every Supabase call degrades gracefully to the static JSON fallback. To add persistence:
+
+1. Create a free project at [supabase.com](https://supabase.com) → **SQL Editor** → paste and run `supabase/schema.sql` (creates the `holidays` and `forecast_logs` tables; RLS is enabled with no public policies so only the server-side service-role key can read/write)
+2. **Project Settings → API** → copy the **Project URL** and the **service_role secret key** (server-side only — never expose it to the frontend)
+3. Create `.env` locally (see `.env.example`) or set env vars on the host / in Vercel project settings:
+   ```
+   SUPABASE_URL=https://<your-project-ref>.supabase.co
+   SUPABASE_SERVICE_KEY=<your-service_role-secret-key>
+   ```
+4. Seed the holiday table: `python seed_holidays.py`
+
+When enabled: holidays are loaded from the `holidays` table (fallback to `data/holidays_dhanbad.json`), every freshly computed forecast window is logged to `forecast_logs`, `GET /api/history` returns recent windows, and `/api/health` reports `"supabase": "connected"`. The integration uses the Supabase REST API via `requests` — no extra dependencies.
+
+## 10. Notes
 
 - The target is **average power (kW) per 30-minute block**, summed across the three 132 kV feeders — the standard dispatch-level quantity for block scheduling.
 - The brief's line "forecast for the next 24 hours (96 blocks)" conflicts with the core objective "48 blocks total for 30-min intervals"; the API defaults to 48 blocks and accepts `?blocks=` up to 96 to cover either reading.
